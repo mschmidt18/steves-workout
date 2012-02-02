@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello Steve! Hope you have a great workout today!</string>
+    <string name="app_name">Steve\'s Workout</string>
+
+    <string-array name="workout_item_types">
+		<item>Exercise</item>
+		<item>Rest</item>
+	</string-array>
+</resources>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+     <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Exercise" />
+    <EditText
+        android:id="@+id/exerciseText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:inputType="text"
+        android:hint="Squats">
+        
+     	<requestFocus />
+    </EditText>
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Weight (optional)" />
+    <EditText
+        android:id="@+id/weightText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:inputType="text"
+        android:hint="225"/>
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Reps (optional)" />
+    <EditText
+        android:id="@+id/repsText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:inputType="text"
+        android:hint="10"/>
+
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Exercise" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancel" />
+
+</LinearLayout>
