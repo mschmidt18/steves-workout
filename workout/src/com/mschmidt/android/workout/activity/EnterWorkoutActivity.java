@@ -19,6 +19,12 @@ import com.mschmidt.android.workout.IWorkoutComponent;
 import com.mschmidt.android.workout.R;
 import com.mschmidt.android.workout.WorkoutSession;
 
+/**
+ * Adding javadoc to this class
+ * 
+ * @author Matt
+ * 
+ */
 public class EnterWorkoutActivity extends Activity {
 	public static final String TAG = "EnterWorkoutActivity";
 	private static final int ADD_REST_REQUEST_CODE = 1;
