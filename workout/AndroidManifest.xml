@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".activity.AddExerciseActivity"></activity>
         <activity android:name=".activity.AddRestActivity"></activity>
+        <activity android:name=".activity.ExecuteWorkoutActivity"></activity>
     </application>
 
 </manifest>

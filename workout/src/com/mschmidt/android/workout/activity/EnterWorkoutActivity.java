@@ -1,6 +1,9 @@
 package com.mschmidt.android.workout.activity;
 
+import java.util.Collections;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +20,7 @@ import android.widget.Spinner;
 
 import com.mschmidt.android.workout.IWorkoutComponent;
 import com.mschmidt.android.workout.R;
+import com.mschmidt.android.workout.Rest;
 import com.mschmidt.android.workout.WorkoutSession;
 
 /**
@@ -29,6 +33,7 @@ public class EnterWorkoutActivity extends Activity {
 	public static final String TAG = "EnterWorkoutActivity";
 	private static final int ADD_REST_REQUEST_CODE = 1;
 	private static final int ADD_EXERCISE_REQUEST_CODE = 2;
+	private static final int DO_WORKOUT_REQUEST_CODE = 3;
 
 	private ListView existingItemsListView;
 	private Button addItemButton;
@@ -59,11 +64,27 @@ public class EnterWorkoutActivity extends Activity {
 					Log.d(TAG, "selectedValue: " + selectedValue);
 					// if rest, launch add_rest
 					if (((String) selectedValue).equals("Rest")) {
-						launchAddRest();
+						launchAddRest(null);
 						// if exercise, launch add_exercise
 					} else if (((String) selectedValue).equals("Exercise")) {
-						launchAddExercise();
+						launchAddExercise(null);
 					}
+				}
+			}
+		});
+
+		startWorkoutButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				Log.d(TAG, "startWorkoutButton clicked");
+				if (WorkoutSession.getInstance().getWorkoutItems().isEmpty()) {
+					new AlertDialog.Builder(EnterWorkoutActivity.this)
+							.setTitle("Can't Do That!")
+							.setMessage("No items in your workout!")
+							.setNeutralButton("Close", null).show();
+				} else {
+					// launch execute workout activity
+					launchDoWorkout();
 				}
 			}
 		});
@@ -109,17 +130,38 @@ public class EnterWorkoutActivity extends Activity {
 
 	/**
 	 * Launches the Add Rest activity to add a new rest item to the workout
+	 * 
+	 * @param edit
+	 *            the index of workoutItemList that we are editing
 	 */
-	private void launchAddRest() {
+	private void launchAddRest(Integer edit) {
 		Intent i = new Intent(this, AddRestActivity.class);
+		if (edit != null) {
+			i.putExtra("edit", edit + 1);
+		}
 		startActivityForResult(i, ADD_REST_REQUEST_CODE);
 	}
 
 	/**
-	 * Launches the Add Exercise activity to add a new exercise to the workout
+	 * Launches the Execute Workout activity to play back the workout
+	 * 
 	 */
-	private void launchAddExercise() {
+	private void launchDoWorkout() {
+		Intent i = new Intent(this, ExecuteWorkoutActivity.class);
+		startActivityForResult(i, DO_WORKOUT_REQUEST_CODE);
+	}
+
+	/**
+	 * Launches the Add Exercise activity to add a new exercise to the workout
+	 * 
+	 * @param edit
+	 *            the index of workoutItemList that we are editing
+	 */
+	private void launchAddExercise(Integer edit) {
 		Intent i = new Intent(this, AddExerciseActivity.class);
+		if (edit != null) {
+			i.putExtra("edit", edit + 1);
+		}
 		startActivityForResult(i, ADD_EXERCISE_REQUEST_CODE);
 	}
 
@@ -150,11 +192,47 @@ public class EnterWorkoutActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.delete:
 
-			/* Remove it from the list. */
+			// Remove it from the list
 			WorkoutSession.getInstance().removeWorkoutItem(menuInfo.position);
 
 			listViewAdapter.notifyDataSetChanged();
-			return true; /* true means: "we handled the event". */
+			return true;
+		case R.id.edit:
+			if (WorkoutSession.getInstance().getWorkoutItems()
+					.get(menuInfo.position) instanceof Rest) {
+				launchAddRest(menuInfo.position);
+			} else {
+				launchAddExercise(menuInfo.position);
+			}
+
+			return true;
+		case R.id.moveup:
+			if (menuInfo.position > 0) {
+				Collections.swap(
+						WorkoutSession.getInstance().getWorkoutItems(),
+						menuInfo.position, menuInfo.position - 1);
+				listViewAdapter.notifyDataSetChanged();
+				return true;
+			} else {
+				new AlertDialog.Builder(this).setTitle("Can't Do That!")
+						.setMessage("Already at the top!")
+						.setNeutralButton("Close", null).show();
+				return false;
+			}
+		case R.id.movedown:
+			if (menuInfo.position < WorkoutSession.getInstance()
+					.getWorkoutItems().size() - 1) {
+				Collections.swap(
+						WorkoutSession.getInstance().getWorkoutItems(),
+						menuInfo.position, menuInfo.position + 1);
+				listViewAdapter.notifyDataSetChanged();
+				return true;
+			} else {
+				new AlertDialog.Builder(this).setTitle("Can't Do That!")
+						.setMessage("Already at the bottom!")
+						.setNeutralButton("Close", null).show();
+				return false;
+			}
 		default:
 			return super.onContextItemSelected(item);
 		}

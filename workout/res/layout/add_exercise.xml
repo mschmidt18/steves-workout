@@ -27,7 +27,7 @@
         android:id="@+id/weightText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
-        android:inputType="text"
+        android:inputType="number"
         android:hint="225"/>
     <TextView
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -38,7 +38,7 @@
         android:id="@+id/repsText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
-        android:inputType="text"
+        android:inputType="number"
         android:hint="10"/>
 
     <Button
