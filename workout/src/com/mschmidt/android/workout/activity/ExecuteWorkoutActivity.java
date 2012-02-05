@@ -6,9 +6,11 @@ import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 
 import com.mschmidt.android.workout.IWorkoutComponent;
@@ -28,6 +30,7 @@ public class ExecuteWorkoutActivity extends Activity {
 	private TextView currentText;
 	private CountDownTimer timer;
 	private MediaPlayer mp;
+	private Chronometer chrono;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,11 @@ public class ExecuteWorkoutActivity extends Activity {
 
 				if (mp != null) {
 					mp.release();
+				}
+
+				if (chrono != null) {
+					chrono.stop();
+					chrono.setVisibility(View.INVISIBLE);
 				}
 
 				currentItem++;
@@ -89,12 +97,20 @@ public class ExecuteWorkoutActivity extends Activity {
 
 				@Override
 				public void onFinish() {
+					// update text to say completed
 					currentText.setText(String.format(
 							"%d minute %d second rest is over!", min, sec));
+
+					// play rest complete sound
 					mp = MediaPlayer.create(ExecuteWorkoutActivity.this,
 							R.raw.failure);
 					mp.start();
 
+					// start post rest timer
+					chrono = (Chronometer) findViewById(R.id.rest_chrono);
+					chrono.setBase(SystemClock.elapsedRealtime());
+					chrono.start();
+					chrono.setVisibility(View.VISIBLE);
 				}
 			};
 			timer.start();
@@ -134,11 +150,12 @@ public class ExecuteWorkoutActivity extends Activity {
 		}
 		seconds = ((double) ms / (double) 1000) - (minutes * 60);
 
-		DecimalFormat df = new DecimalFormat("#");
+		DecimalFormat minDf = new DecimalFormat("00");
+		DecimalFormat secDf = new DecimalFormat("00.000");
 
-		sb.append(df.format(minutes));
+		sb.append(minDf.format(minutes));
 		sb.append(":");
-		sb.append(Double.toString(seconds));
+		sb.append(secDf.format(seconds));
 		return sb.toString();
 	}
 }

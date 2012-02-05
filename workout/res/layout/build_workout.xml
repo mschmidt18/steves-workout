@@ -12,17 +12,19 @@
     <ListView
         android:id="@+id/existingItemsListView"
         android:layout_width="fill_parent"
-        android:layout_height="320dp" >
+        android:layout_height="370dp" >
         <!-- Preview: listitem=@android:layout/simple_list_item_1 -->
         
     </ListView>
 
+    <!-- 
         <Spinner
             android:id="@+id/workoutItemSpinner"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
-            <!-- Preview: listitem=@android:layout/simple_spinner_item -->
+            <!-/- Preview: listitem=@android:layout/simple_spinner_item -/->
         </Spinner>
+	-->
 
         <Button
             android:id="@+id/addItemButton"

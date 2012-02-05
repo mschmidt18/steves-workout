@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +17,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Spinner;
 
 import com.mschmidt.android.workout.IWorkoutComponent;
 import com.mschmidt.android.workout.R;
@@ -38,7 +38,7 @@ public class EnterWorkoutActivity extends Activity {
 	private ListView existingItemsListView;
 	private Button addItemButton;
 	private Button startWorkoutButton;
-	private Spinner workoutItemSpinner;
+	// private Spinner workoutItemSpinner;
 	private ArrayAdapter<IWorkoutComponent> listViewAdapter;
 
 	/** Called when the activity is first created. */
@@ -51,25 +51,48 @@ public class EnterWorkoutActivity extends Activity {
 		existingItemsListView = (ListView) findViewById(R.id.existingItemsListView);
 		addItemButton = (Button) findViewById(R.id.addItemButton);
 		startWorkoutButton = (Button) findViewById(R.id.startWorkoutButton);
-		workoutItemSpinner = (Spinner) findViewById(R.id.workoutItemSpinner);
+		// workoutItemSpinner = (Spinner) findViewById(R.id.workoutItemSpinner);
 
 		// Register handler for UI elements
 		addItemButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Log.d(TAG, "addItemButton clicked");
-				// get spinner value
 
-				Object selectedValue = workoutItemSpinner.getSelectedItem();
-				if (selectedValue != null) {
-					Log.d(TAG, "selectedValue: " + selectedValue);
-					// if rest, launch add_rest
-					if (((String) selectedValue).equals("Rest")) {
-						launchAddRest(null);
-						// if exercise, launch add_exercise
-					} else if (((String) selectedValue).equals("Exercise")) {
-						launchAddExercise(null);
+				final CharSequence[] items = { "Exercise", "Rest" };
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						EnterWorkoutActivity.this);
+				builder.setTitle("Pick an Item");
+				builder.setItems(items, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						if (item == 0) {
+							launchAddExercise(null);
+						} else if (item == 1) {
+							launchAddRest(null);
+						} else {
+							dialog.cancel();
+						}
 					}
-				}
+				});
+				builder.setNeutralButton("Cancel",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+				builder.show();
+
+				// Object selectedValue = workoutItemSpinner.getSelectedItem();
+				// if (selectedValue != null) {
+				// Log.d(TAG, "selectedValue: " + selectedValue);
+				// // if rest, launch add_rest
+				// if (((String) selectedValue).equals("Rest")) {
+				// launchAddRest(null);
+				// // if exercise, launch add_exercise
+				// } else if (((String) selectedValue).equals("Exercise")) {
+				// launchAddExercise(null);
+				// }
+				// }
 			}
 		});
 
@@ -93,7 +116,7 @@ public class EnterWorkoutActivity extends Activity {
 		populateListView();
 
 		// Populate the spinner of workout item types
-		populateSpinner();
+		// populateSpinner();
 	}
 
 	/**
@@ -120,13 +143,13 @@ public class EnterWorkoutActivity extends Activity {
 		// });
 	}
 
-	private void populateSpinner() {
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				this, R.array.workout_item_types,
-				android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		workoutItemSpinner.setAdapter(adapter);
-	}
+	// private void populateSpinner() {
+	// ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+	// this, R.array.workout_item_types,
+	// android.R.layout.simple_spinner_item);
+	// adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	// workoutItemSpinner.setAdapter(adapter);
+	// }
 
 	/**
 	 * Launches the Add Rest activity to add a new rest item to the workout
